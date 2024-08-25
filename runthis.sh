@@ -46,10 +46,9 @@ echo "which kernel would you like to use? (linux, linux-zen, linux-lts, linux-ha
 read -r KERNEL
 echo "what other packages would you like to use? eg: de/wm (base linux-firmware nano vim vi kitty rust git wget rust gcc and llvm all included)"
 read -r OTH_P
-pacstrap -K "$B_DIR" base linux-firmware nano vim vi kitty rust git wget rust gcc llvm sudo which grub efibootmgr reflector "$KERNEL" "$OTH_P"
+pacstrap -K "$B_DIR" base linux-firmware nano vim vi kitty rust git wget rust gcc llvm sudo which grub efibootmgr reflector $KERNEL $OTH_P
 genfstab -U "$B_DIR" >> /mnt/barchinstall/etc/fstab
-chmod +x chroot.sh
-arch-chroot "$B_DIR" bash -c "
+arch-chroot "$B_DIR" bash -c '
     
     echo '--save /etc/pacman.d/mirrorlist
     --country United Kingdom
@@ -58,17 +57,17 @@ arch-chroot "$B_DIR" bash -c "
     systemctl enable reflector.service
     clear
 
-    echo 'Which Region are you in? $(ls /usr/share/zoneinfo)'
+    echo Which Region are you in? $(ls /usr/share/zoneinfo)
     read REGION
     clear
-    echo 'Which City are you in/closest too?'
+    echo Which City are you in/closest too?
     $(ls /usr/share/zoneinfo/"$REGION")
     read CITY
     clear
     ln -sf /usr/share/zoneinfo/$REGION/$CITY
     hwclock --systohc
     clear
-    echo 'list all your locales now :)'
+    echo list all your locales now :)
     read LOCALES
     echo $LOCALES >> /etc/locale.gen
     locale-gen
@@ -79,7 +78,7 @@ arch-chroot "$B_DIR" bash -c "
     read USER_N
     if [ -n $USER_N ]; then
     useradd -mG wheel,video,input,audio $USER_N
-    echo "%wheel ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    echo "%wheel ALL=\(ALL:ALL)\ NOPASSWD: ALL" >> /etc/sudoers
     passwd $USER_N
     su $USER_N
     cd ~
@@ -99,7 +98,7 @@ arch-chroot "$B_DIR" bash -c "
     fi
     grub-install --target=x86_64-efi --efi-directory=/boot/efi
     grub-mkconfig -o /boot/grub/grub.cfg
-"
+'
 clear
 echo "do you wanna chroot in? y/n"
 read CHROOT_Y_N
