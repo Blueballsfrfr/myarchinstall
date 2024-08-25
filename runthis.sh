@@ -54,7 +54,7 @@ genfstab -U "$B_DIR" >> /mnt/barchinstall/etc/fstab
 
 # shellcheck disable=SC1072
 # shellcheck disable=SC1073
-cat EOF << | arch-chroot $B_DIR
+cat << EOF | arch-chroot $B_DIR
     echo "--save /etc/pacman.d/mirrorlist
     --country United Kingdom
     --protocol https
