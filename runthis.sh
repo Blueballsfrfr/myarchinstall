@@ -11,7 +11,6 @@ fi"
 clear
 echo "which disk would you like to install too?"
 lsblk | grep disk
-ehco 
 read -r DISK
 cfdisk /dev/"$DISK"
 $ERROR_CRASH
